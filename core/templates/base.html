@@ -1,3 +1,5 @@
+{% load core_extras %}
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -29,6 +31,10 @@
             {% if request.user.is_staff %}
             <a class="dropdown-item" href="admin">Administration</a>
             {% endif %}
+            {% if request.user|has_group:"entraineur" %}
+            <a class="dropdown-item" href="events/create">Créer un événement</a>
+            {% endif %}
+
             </div>
         </li>
         {% endif %}
