@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-  <h2>S'inscrire</h2>
+  <h2>Créer un événement</h2>
   <form method="post">
     {% csrf_token %}
     {{ form | crispy }}
