@@ -3,6 +3,7 @@
 
 {% block content %}
   <h2>Les événements à venir</h2>
+  {% if events %}
   <table class="table table-striped">
         <thead>
           <tr>
@@ -10,7 +11,7 @@
             <th scope="col">Type</th>
             <th scope="col">Date de l'événement</th>
             <th scope="col">Description</th>
-            <th scope="col">Detail</th>
+            <th scope="col">Présences</th>
           </tr>
         </thead>
         <tbody>
@@ -20,9 +21,12 @@
             <td>{{ event.get_event_type_display }}</td>
             <td>{{ event.event_date }}</td>
             <td>{{ event.description }}</td>
-            <td><a href="{% url 'list_attendances' event_id=event.pk %}" class="btn btn-secondary">Détail</a></td>
+            <td><a href="{% url 'list_attendances' event_id=event.pk %}" class="btn btn-secondary">&#128269;</a></td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
+      {% else %}
+      <div><p>Aucun événement à venir</p></div>
+      {% endif %}
 {% endblock %}

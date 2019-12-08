@@ -3,6 +3,7 @@
 
 {% block content %}
   <h2>Les présences de/du {{ event }}</h2>
+  {% if event.attendants.all %}
   <table class="table table-striped">
     <thead>
         <tr>
@@ -23,5 +24,8 @@
         {% endfor %}
     </tbody>
   </table>
+  {% else %}
+  <div><p>Aucune présence disponible</p></div>
+  {% endif %}
   <a href="{% url 'list_events' %}" class="btn btn-secondary">Précédent</a>
 {% endblock %}
