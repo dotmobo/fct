@@ -17,7 +17,7 @@ class CreateEventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = ['event_date', 'description', 'added_by']
+        fields = ['event_type', 'event_date', 'description', 'added_by']
         widgets = {
             'added_by': forms.HiddenInput(),
             'event_date': forms.TextInput(attrs={'type': 'date'})
