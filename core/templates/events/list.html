@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <h2>Les événements à venir</h2>
+  <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Type</th>
+            <th scope="col">Date de l'événement</th>
+            <th scope="col">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for event in events %}
+          <tr>
+            <th scope="row">{{ event.pk }}</th>
+            <td>{{ event.get_event_type_display }}</td>
+            <td>{{ event.event_date }}</td>
+            <td>{{ event.description }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+{% endblock %}

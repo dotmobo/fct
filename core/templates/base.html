@@ -33,6 +33,7 @@
             {% endif %}
             {% if request.user|has_group:"entraineur" %}
             <a class="dropdown-item" href="{% url 'create_event' %}">Créer un événement</a>
+            <a class="dropdown-item" href="{% url 'list_events' %}">Lister les événements</a>
             {% endif %}
 
             </div>

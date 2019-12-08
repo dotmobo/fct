@@ -3,9 +3,10 @@ from django.shortcuts import render, render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
-
+from datetime import date
 from core.forms import SignUpForm, CreateEventForm
 from core.decorators import group_required
+from core.models import Event
 
 def index(request):
     return render(request, 'index.html')
@@ -52,3 +53,7 @@ def create_event(request):
     else:
         form = CreateEventForm(initial={'added_by': request.user})
     return render(request, 'events/create.html', {'form': form})
+
+@group_required("entraineur")
+def list_events(request):
+    return render(request, 'events/list.html', {'events': Event.objects.filter(event_date__gte=date.today())})
