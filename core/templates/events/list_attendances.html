@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <h2>Les présences de/du {{ event }}</h2>
+  <table class="table table-striped">
+    <thead>
+        <tr>
+        <th scope="col">#</th>
+        <th scope="col">Evénement</th>
+        <th scope="col">Joueur</th>
+        <th scope="col">Est présent</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for attendant in event.attendants.all %}
+        <tr>
+        <th scope="row">{{ attendant.pk }}</th>
+        <td>{{ event }}</td>
+        <td>{{ attendant.attendee.last_name }} {{ attendant.attendee.first_name }}</td>
+        <td>{% if attendant.is_attending %}&#10004;{% else %}&#10006;{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+  <a href="{% url 'list_events' %}" class="btn btn-secondary">Précédent</a>
+{% endblock %}

@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from datetime import date
 from core.forms import SignUpForm, CreateEventForm
 from core.decorators import group_required
-from core.models import Event
+from core.models import Event, Attendance
 
 def index(request):
     return render(request, 'index.html')
@@ -57,3 +57,9 @@ def create_event(request):
 @group_required("entraineur")
 def list_events(request):
     return render(request, 'events/list.html', {'events': Event.objects.filter(event_date__gte=date.today())})
+
+@group_required("entraineur")
+def list_attendances(request, event_id):
+    return render(request, 'events/list_attendances.html',
+        {'event': Event.objects.get(pk=event_id),
+         'attendances': Attendance.objects.filter(event__pk=event_id)})
