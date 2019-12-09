@@ -65,5 +65,9 @@ def list_events(request):
 @group_required("entraineur")
 def list_attendances(request, event_id):
     return render(request, 'events/list_attendances.html',
-        {'event': Event.objects.get(pk=event_id),
-         'attendances': Attendance.objects.filter(event__pk=event_id)})
+        {'event': Event.objects.get(pk=event_id)})
+
+@group_required("joueur")
+def my_attendances(request):
+    return render(request, 'events/my_attendances.html', {'attendances': Attendance.objects.filter(
+        event__event_date__gte=date.today(), attendee=request.user)})

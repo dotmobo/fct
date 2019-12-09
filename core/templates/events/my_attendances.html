@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <h2>Mes présences d'événements à venir</h2>
+  {% if attendances %}
+  <table class="table table-striped">
+    <thead>
+        <tr>
+        <th scope="col">#</th>
+        <th scope="col">Evénement</th>
+        <th scope="col">Joueur</th>
+        <th scope="col">Est présent</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for attendant in attendances %}
+        <tr>
+        <th scope="row">{{ attendant.pk }}</th>
+        <td>{{ attendant.event }}</td>
+        <td>{{ attendant.attendee.last_name }} {{ attendant.attendee.first_name }}</td>
+        <td>{% if attendant.is_attending == True %}✔️{% elif attendant.is_attending == False %}❌{% else %}❔{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div><p>Aucune présence disponible</p></div>
+  {% endif %}
+{% endblock %}
