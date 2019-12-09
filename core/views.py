@@ -88,32 +88,34 @@ def activate(request, uidb64, token):
 def create_event(request):
     if request.method == 'POST':
         form = CreateEventForm(request.POST)
+        print(form.is_valid())
         if form.is_valid():
             new_event = form.save()
+            form.cleaned_data['added_by'] = request.user
             # Create attendance for all players
-            for u in User.objects.filter(groups__name='joueur'):
+            for u in User.objects.filter(groups__name__in=('joueur', 'entraineur') ):
                 Attendance.objects.create(event=new_event, attendee=u, is_attending=None)
             return redirect('list_events')
     else:
         form = CreateEventForm(initial={'added_by': request.user})
     return render(request, 'events/create.html', {'form': form})
 
-@group_required("entraineur")
+@group_required("entraineur", "joueur")
 def list_events(request):
     return render(request, 'events/list.html', {'events': Event.objects.filter(event_date__gte=date.today())})
 
-@group_required("entraineur")
+@group_required("entraineur", "joueur")
 def list_attendances(request, event_id):
     return render(request, 'events/list_attendances.html',
         {'event': Event.objects.get(pk=event_id)})
 
-@group_required("joueur")
+@group_required("entraineur", "joueur")
 def my_attendances(request):
     return render(request, 'events/my_attendances.html', {'attendances': Attendance.objects.filter(
         event__event_date__gte=date.today(), attendee=request.user)})
 
 
-@group_required("joueur")
+@group_required("entraineur", "joueur")
 def my_attendance(request, attendance_id):
     attendance = Attendance.objects.get(pk=attendance_id)
     if attendance.attendee == request.user:

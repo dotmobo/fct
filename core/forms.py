@@ -14,12 +14,12 @@ class SignUpForm(UserCreationForm):
 
 
 class CreateEventForm(forms.ModelForm):
-    disabled_fields = ('added_by', )
+    # TODO fix it disabled_fields = ('added_by', )
 
-    def __init__(self, *args, **kwargs):
-        super(CreateEventForm, self).__init__(*args, **kwargs)
-        for field in self.disabled_fields:
-            self.fields[field].disabled = True
+    # def __init__(self, *args, **kwargs):
+    #    super(CreateEventForm, self).__init__(*args, **kwargs)
+    #    for field in self.disabled_fields:
+    #        self.fields[field].disabled = True
 
     class Meta:
         model = Event

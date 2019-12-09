@@ -36,9 +36,9 @@
                 <div class="dropdown-menu" aria-labelledby="dropdown01">
                 {% if request.user|has_group:"entraineur" %}
                 <a class="dropdown-item" href="{% url 'create_event' %}">Créer un événement</a>
-                <a class="dropdown-item" href="{% url 'list_events' %}">Lister les événements</a>
                 {% endif %}
-                {% if request.user|has_group:"joueur" %}
+                {% if request.user|has_group:"entraineur" or request.user|has_group:"joueur" %}
+                <a class="dropdown-item" href="{% url 'list_events' %}">Lister les événements</a>
                 <a class="dropdown-item" href="{% url 'my_attendances' %}">Voir mes présences</a>
                 {% endif %}
                 </div>

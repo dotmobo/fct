@@ -1,0 +1,7 @@
+{% autoescape off %}
+Bonjour {{ attendance.attendee.first_name }} {{ attendance.attendee.last_name }},
+
+Cliquez sur le lien suivant pour signaler votre présence ou nom à l'événement {{ attendance.event }}
+
+http://{{ domain }}{% url 'my_attendance' attendance_id=attendance.pk %}
+{% endautoescape %}

@@ -4,6 +4,8 @@ from django.core.exceptions import ValidationError
 from datetime import date
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
 
 def present_or_future_date(value):
     if value < date.today():
@@ -13,9 +15,17 @@ def present_or_future_date(value):
 class Event(models.Model):
     ENTRAINEMENT = 'ENTRAINEMENT'
     MATCH = 'MATCH'
+    MARCHE_GOURMANDE = 'MARCHE_GOURMANDE'
+    FETE_DE_LA_CERISE = 'FETE_DE_LA_CERISE'
+    JOURNEE_TRAVAIL = 'JOURNEE_TRAVAIL'
+    AUTRES = 'AUTRES'
     EVENT_TYPES = [
         (ENTRAINEMENT, 'Entrainement'),
         (MATCH, 'Match'),
+        (MARCHE_GOURMANDE, 'Marche gourmande'),
+        (FETE_DE_LA_CERISE, 'Fête de la cerise'),
+        (JOURNEE_TRAVAIL, 'Journée travail'),
+        (AUTRES, 'Autres'),
     ]
 
     event_type = models.CharField(
@@ -56,3 +66,18 @@ def update_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
     instance.profile.save()
+
+
+@receiver(post_save, sender=Attendance)
+def send_event_mail(sender, instance, created, **kwargs):
+    if created:
+        # TODO current_site = get_current_site(request)
+        subject = 'Valider votre présence'
+        message = render_to_string('emails/attendance_validation.html', {
+            'attendance': instance,
+            # 'domain': current_site.domain,
+            'domain': "127.0.0.1:8000",
+        })
+
+
+        instance.attendee.email_user(subject, message)
