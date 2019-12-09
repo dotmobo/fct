@@ -5,9 +5,10 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from datetime import date
-from core.forms import SignUpForm, CreateEventForm
+from core.forms import SignUpForm, CreateEventForm, ModifyAttendanceForm
 from core.decorators import group_required
 from core.models import Event, Attendance
+from django.http import HttpResponseForbidden
 
 def index(request):
     return render(request, 'index.html')
@@ -48,7 +49,6 @@ def create_event(request):
     if request.method == 'POST':
         form = CreateEventForm(request.POST)
         if form.is_valid():
-            form.cleaned_data['added_by'] = request.user
             new_event = form.save()
             # Create attendance for all players
             for u in User.objects.filter(groups__name='joueur'):
@@ -71,3 +71,19 @@ def list_attendances(request, event_id):
 def my_attendances(request):
     return render(request, 'events/my_attendances.html', {'attendances': Attendance.objects.filter(
         event__event_date__gte=date.today(), attendee=request.user)})
+
+
+@group_required("joueur")
+def my_attendance(request, attendance_id):
+    attendance = Attendance.objects.get(pk=attendance_id)
+    if attendance.attendee == request.user:
+        if request.method == 'POST':
+            form = ModifyAttendanceForm(request.POST, instance=attendance)
+            if form.is_valid():
+                form.save()
+                return redirect('my_attendances')
+        else:
+            form = ModifyAttendanceForm(instance=attendance)
+    else:
+        return HttpResponseForbidden()
+    return render(request, 'events/my_attendance.html', {'attendance': attendance, 'form': form})

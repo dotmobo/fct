@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from core.models import Event
+from core.models import Event, Attendance
 
 class SignUpForm(UserCreationForm):
     first_name = forms.CharField(max_length=50, required=True, help_text='Veuillez saisir votre prénom', label="Prénom")
@@ -14,6 +14,12 @@ class SignUpForm(UserCreationForm):
 
 
 class CreateEventForm(forms.ModelForm):
+    disabled_fields = ('added_by', )
+
+    def __init__(self, *args, **kwargs):
+        super(CreateEventForm, self).__init__(*args, **kwargs)
+        for field in self.disabled_fields:
+            self.fields[field].disabled = True
 
     class Meta:
         model = Event
@@ -21,4 +27,20 @@ class CreateEventForm(forms.ModelForm):
         widgets = {
             'added_by': forms.HiddenInput(),
             'event_date': forms.TextInput(attrs={'type': 'date'})
+        }
+
+class ModifyAttendanceForm(forms.ModelForm):
+    disabled_fields = ('event', 'attendee')
+
+    def __init__(self, *args, **kwargs):
+        super(ModifyAttendanceForm, self).__init__(*args, **kwargs)
+        for field in self.disabled_fields:
+            self.fields[field].disabled = True
+
+    class Meta:
+        model = Attendance
+        fields = ['event', 'attendee', 'is_attending']
+        widgets = {
+            'event': forms.HiddenInput(),
+            'attendee': forms.HiddenInput(),
         }
