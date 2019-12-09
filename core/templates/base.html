@@ -46,6 +46,7 @@
             {% endif %}
             </ul>
             {% if request.user.is_authenticated %}
+            <span class="text-light my-2 my-sm-0 mx-2">Bienvenue, {{ request.user.first_name }}</span>
             <a class="btn btn-secondary my-2 my-sm-0" href="{% url 'signout' %}">Se déconnecter</a>
             {% else %}
             <a class="btn btn-secondary my-2 my-sm-0 mx-2" href="{% url 'signup' %}">S'inscrire</a>
