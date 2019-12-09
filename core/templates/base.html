@@ -21,22 +21,24 @@
     
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
-        <!-- <li class="nav-item active">
+        <li class="nav-item">
             <a class="nav-link" href="/">Accueil <span class="sr-only">(current)</span></a>
-        </li> -->
+        </li>
         {% if request.user.is_authenticated %}
+        {% if request.user.is_staff %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin:index' %}">Administration</a>
+        </li>
+        {% endif %}
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Menu</a>
+            <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
-            {% if request.user.is_staff %}
-            <a class="dropdown-item" href="{% url 'admin:index' %}">Administration</a>
-            {% endif %}
             {% if request.user|has_group:"entraineur" %}
             <a class="dropdown-item" href="{% url 'create_event' %}">Créer un événement</a>
             <a class="dropdown-item" href="{% url 'list_events' %}">Lister les événements</a>
             {% endif %}
             {% if request.user|has_group:"joueur" %}
-            <a class="dropdown-item" href="{% url 'my_attendances' %}">Mes présences</a>
+            <a class="dropdown-item" href="{% url 'my_attendances' %}">Voir mes présences</a>
             {% endif %}
             </div>
         </li>
