@@ -8,7 +8,7 @@ from datetime import date
 from core.forms import SignUpForm, CreateEventForm, ModifyAttendanceForm
 from core.decorators import group_required
 from core.models import Event, Attendance
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponseRedirect
 
 def index(request):
     return render(request, 'index.html')
@@ -39,7 +39,11 @@ def signin(request):
             raw_password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            return redirect('index')
+            next_url = request.GET.get('next')
+            if next_url:
+                return HttpResponseRedirect(next_url)
+            else:
+                return redirect('index')
     else:
         form = AuthenticationForm()
     return render(request, 'signin.html', {'form': form})
