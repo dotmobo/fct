@@ -19,7 +19,7 @@
         <th scope="row">{{ attendant.pk }}</th>
         <td>{{ event }}</td>
         <td>{{ attendant.attendee.last_name }} {{ attendant.attendee.first_name }}</td>
-        <td>{% if attendant.is_attending %}&#10004;{% else %}&#10006;{% endif %}</td>
+        <td>{% if attendant.is_attending == True %}✔️{% elif attendant.is_attending == False %}❌{% else %}❔{% endif %}</td>
         </tr>
         {% endfor %}
     </tbody>

@@ -3,6 +3,7 @@ from django.shortcuts import render, render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from datetime import date
 from core.forms import SignUpForm, CreateEventForm
 from core.decorators import group_required
@@ -48,8 +49,11 @@ def create_event(request):
         form = CreateEventForm(request.POST)
         if form.is_valid():
             form.cleaned_data['added_by'] = request.user
-            form.save()
-            return redirect('index')
+            new_event = form.save()
+            # Create attendance for all players
+            for u in User.objects.filter(groups__name='joueur'):
+                Attendance.objects.create(event=new_event, attendee=u, is_attending=None)
+            return redirect('list_events')
     else:
         form = CreateEventForm(initial={'added_by': request.user})
     return render(request, 'events/create.html', {'form': form})
