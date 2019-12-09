@@ -16,6 +16,7 @@ from django.template.loader import render_to_string
 from core.tokens import account_activation_token
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.models import Group
 
 def index(request):
     return render(request, 'index.html')
@@ -76,6 +77,8 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.profile.email_confirmed = True
         user.save()
+        joueur = Group.objects.get(name='joueur') 
+        joueur.user_set.add(user)    
         login(request, user)
         return redirect('index')
     else:
