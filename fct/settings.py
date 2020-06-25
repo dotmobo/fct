@@ -132,3 +132,4 @@ LOGIN_URL='signin'
 
 # email
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_DOMAIN_LINK = '127.0.0.1:8000'

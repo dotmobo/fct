@@ -5,7 +5,7 @@ from datetime import date
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.template.loader import render_to_string
-from django.contrib.sites.shortcuts import get_current_site
+from django.conf import settings
 
 def present_or_future_date(value):
     if value < date.today():
@@ -71,12 +71,10 @@ def update_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=Attendance)
 def send_event_mail(sender, instance, created, **kwargs):
     if created:
-        # TODO current_site = get_current_site(request)
         subject = 'Valider votre présence'
         message = render_to_string('emails/attendance_validation.html', {
             'attendance': instance,
-            # 'domain': current_site.domain,
-            'domain': "127.0.0.1:8000",
+            'domain': settings.EMAIL_DOMAIN_LINK,
         })
 
 

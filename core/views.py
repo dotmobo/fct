@@ -9,7 +9,6 @@ from core.forms import SignUpForm, CreateEventForm, ModifyAttendanceForm
 from core.decorators import group_required
 from core.models import Event, Attendance
 from django.http import HttpResponseForbidden, HttpResponseRedirect
-from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.template.loader import render_to_string
@@ -17,6 +16,7 @@ from core.tokens import account_activation_token
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.models import Group
+from django.conf import settings
 
 def index(request):
     return render(request, 'index.html')
@@ -28,11 +28,10 @@ def signup(request):
             user = form.save(commit=False)
             user.is_active = False
             user.save()
-            current_site = get_current_site(request)
             subject = 'Activez votre compte FCT'
             message = render_to_string('emails/account_activation_email.html', {
                 'user': user,
-                'domain': current_site.domain,
+                'domain': settings.EMAIL_DOMAIN_LINK,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
