@@ -7,8 +7,8 @@ class EventAdmin(admin.ModelAdmin):
     list_filter = ('event_type',)
 
 class AttendanceAdmin(admin.ModelAdmin):
-    list_display = ('event', 'attendee', 'is_attending')
-    list_filter = ('event', 'is_attending')
+    list_display = ('event', 'attendee', 'is_attending', 'is_selected')
+    list_filter = ('event', 'is_attending', 'is_selected')
 
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'email_confirmed')

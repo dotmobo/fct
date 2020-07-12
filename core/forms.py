@@ -30,7 +30,7 @@ class CreateEventForm(forms.ModelForm):
         }
 
 class ModifyAttendanceForm(forms.ModelForm):
-    disabled_fields = ('event', 'attendee')
+    disabled_fields = ('event', 'attendee', 'is_selected')
 
     def __init__(self, *args, **kwargs):
         super(ModifyAttendanceForm, self).__init__(*args, **kwargs)
@@ -39,8 +39,26 @@ class ModifyAttendanceForm(forms.ModelForm):
 
     class Meta:
         model = Attendance
-        fields = ['event', 'attendee', 'is_attending']
+        fields = ['event', 'attendee', 'is_attending', 'is_selected']
         widgets = {
             'event': forms.HiddenInput(),
             'attendee': forms.HiddenInput(),
+            'is_selected': forms.HiddenInput(),
+        }
+
+class ModifySelectionForm(forms.ModelForm):
+    disabled_fields = ('event', 'attendee', 'is_attending')
+
+    def __init__(self, *args, **kwargs):
+        super(ModifySelectionForm, self).__init__(*args, **kwargs)
+        for field in self.disabled_fields:
+            self.fields[field].disabled = True
+
+    class Meta:
+        model = Attendance
+        fields = ['event', 'attendee', 'is_attending', 'is_selected']
+        widgets = {
+            'event': forms.HiddenInput(),
+            'attendee': forms.HiddenInput(),
+            'is_attending': forms.HiddenInput(),
         }

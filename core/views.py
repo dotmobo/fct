@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from datetime import date
-from core.forms import SignUpForm, CreateEventForm, ModifyAttendanceForm
+from core.forms import SignUpForm, CreateEventForm, ModifyAttendanceForm, ModifySelectionForm
 from core.decorators import group_required
 from core.models import Event, Attendance
 from django.http import HttpResponseForbidden, HttpResponseRedirect
@@ -128,3 +128,15 @@ def my_attendance(request, attendance_id):
     else:
         return HttpResponseForbidden()
     return render(request, 'events/my_attendance.html', {'attendance': attendance, 'form': form})
+
+@group_required("entraineur")
+def player_selection(request, attendance_id):
+    attendance = Attendance.objects.get(pk=attendance_id)
+    if request.method == 'POST':
+        form = ModifySelectionForm(request.POST, instance=attendance)
+        if form.is_valid():
+            form.save()
+            return redirect('list_attendances', event_id=attendance.event.pk)
+    else:
+        form = ModifySelectionForm(instance=attendance)
+    return render(request, 'events/player_selection.html', {'attendance': attendance, 'form': form})

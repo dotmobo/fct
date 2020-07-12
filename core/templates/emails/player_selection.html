@@ -1,0 +1,6 @@
+{% autoescape off %}
+Bonjour {{ attendance.attendee.first_name }} {{ attendance.attendee.last_name }},
+
+Vous avez été sélectionné par l'entraineur pour le match suivant : {{ attendance.event }}
+
+{% endautoescape %}

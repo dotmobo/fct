@@ -11,6 +11,7 @@
         <th scope="col">Evénement</th>
         <th scope="col">Joueur</th>
         <th scope="col">Est présent</th>
+        <th scope="col">Est sélectionné</th>
         <th scope="col">Modifier</th>
         </tr>
     </thead>
@@ -21,6 +22,7 @@
         <td>{{ attendant.event }}</td>
         <td>{{ attendant.attendee.last_name }} {{ attendant.attendee.first_name }}</td>
         <td>{% if attendant.is_attending == True %}✔️{% elif attendant.is_attending == False %}❌{% else %}❔{% endif %}</td>
+        <td>{% if attendant.is_selected == True %}✔️{% elif attendant.is_selected == False %}❌{% else %}❔{% endif %}</td>
         <td><a href="{% url 'my_attendance' attendance_id=attendant.pk %}" class="btn btn-secondary">🖉</a></td>
         </tr>
         {% endfor %}

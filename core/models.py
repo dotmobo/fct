@@ -50,6 +50,7 @@ class Attendance(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='attendants', verbose_name = 'Événement')
     attendee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='attending', verbose_name = 'Participant')
     is_attending = models.BooleanField(null=True, verbose_name = 'Est présent')
+    is_selected = models.BooleanField(null=True, verbose_name = 'Est sélectionné')
 
     class Meta:
         verbose_name = 'Présence'
@@ -76,6 +77,12 @@ def send_event_mail(sender, instance, created, **kwargs):
             'attendance': instance,
             'domain': settings.EMAIL_DOMAIN_LINK,
         })
-
-
         instance.attendee.email_user(subject, message)
+    else:
+        if instance.event.event_type == 'MATCH' and instance.is_attending == True and instance.is_selected == True:
+            subject = 'Vous avez été sélectionné pour un match'
+            message = render_to_string('emails/player_selection.html', {
+                'attendance': instance,
+                'domain': settings.EMAIL_DOMAIN_LINK,
+            })
+            instance.attendee.email_user(subject, message)
