@@ -7,10 +7,18 @@ class SignUpForm(UserCreationForm):
     first_name = forms.CharField(max_length=50, required=True, help_text='Veuillez saisir votre prénom', label="Prénom")
     last_name = forms.CharField(max_length=50, required=True, help_text='Veuillez saisir votre nom', label="Nom")
     email = forms.EmailField(max_length=255, help_text="Veuillez saisir votre adresse mail", label="Email")
+    phone = forms.CharField(max_length=20, help_text="Veuillez saisir votre numéro de téléphone", label="Téléphone")
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
+        fields = ('username', 'first_name', 'last_name', 'email', 'phone', 'password1', 'password2', )
+
+    def save(self, commit=True):
+        user = super(SignUpForm, self).save(commit=False)
+        user.phone = self.cleaned_data["phone"]
+        if commit:
+            user.save()
+        return user
 
 
 class CreateEventForm(forms.ModelForm):

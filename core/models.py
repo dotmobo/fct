@@ -41,7 +41,7 @@ class Event(models.Model):
 
     class Meta:
         verbose_name = 'Événement'
-    
+
     def __str__(self):
         return self.get_event_type_display() + ' du ' + str(self.event_date)
 
@@ -61,11 +61,15 @@ class Attendance(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email_confirmed = models.BooleanField(default=False)
+    phone = models.CharField(max_length=20, blank=True, verbose_name="Téléphone")
 
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
+        if hasattr(instance, 'phone'):
+            Profile.objects.create(user=instance, phone=instance.phone)
+        else:
+            Profile.objects.create(user=instance, phone='')
     instance.profile.save()
 
 

@@ -11,8 +11,8 @@ class AttendanceAdmin(admin.ModelAdmin):
     list_filter = ('event', 'is_attending', 'is_selected')
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'email_confirmed')
-    list_filter = ('user', 'email_confirmed')
+    list_display = ('user', 'email_confirmed', 'phone')
+    list_filter = ('user', 'email_confirmed', 'phone')
 
 admin.site.register(Event, EventAdmin)
 admin.site.register(Attendance, AttendanceAdmin)
