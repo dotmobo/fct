@@ -76,8 +76,8 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.profile.email_confirmed = True
         user.save()
-        joueur = Group.objects.get(name='joueur') 
-        joueur.user_set.add(user)    
+        joueur = Group.objects.get(name='joueur')
+        joueur.user_set.add(user)
         login(request, user)
         return redirect('index')
     else:
@@ -140,3 +140,8 @@ def player_selection(request, attendance_id):
     else:
         form = ModifySelectionForm(instance=attendance)
     return render(request, 'events/player_selection.html', {'attendance': attendance, 'form': form})
+
+@group_required("entraineur", "joueur")
+def list_users(request):
+    return render(request, 'users/list.html',
+        {'users': User.objects.filter(is_active=True)})
