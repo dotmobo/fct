@@ -5,6 +5,9 @@
 {% block content %}
   <h2>Les présences de/du {{ event }}</h2>
   {% if event.attendants.all %}
+  {% if request.user|has_group:"entraineur" and event.event_type == 'MATCH' %}
+    <div>Sélectionnés: {{ event.attendants.all | is_selected | length }}</div>
+  {% endif %}
   <table class="table table-striped table-responsive">
     <thead>
         <tr>
