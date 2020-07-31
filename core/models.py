@@ -118,3 +118,13 @@ def send_event_mail(sender, instance, created, **kwargs):
                 'domain': settings.EMAIL_DOMAIN_LINK,
             })
             instance.attendee.email_user(subject, message)
+
+@receiver(post_save, sender=Task)
+def send_task_mail(sender, instance, created, **kwargs):
+    if created:
+        subject = 'Une tâche vous a été affectée'
+        message = render_to_string('emails/task_assignation.html', {
+            'task': instance,
+            'domain': settings.EMAIL_DOMAIN_LINK,
+        })
+        instance.attendance.attendee.email_user(subject, message)

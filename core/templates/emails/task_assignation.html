@@ -1,0 +1,6 @@
+{% autoescape off %}
+Bonjour {{ task.attendance.attendee.first_name }} {{ task.attendance.attendee.last_name }},
+
+La tâche {{ task.get_task_type_display }} vous a été assignée pour l'évènement suivant : {{ task.attendance.event }}
+
+{% endautoescape %}
