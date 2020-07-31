@@ -154,14 +154,15 @@ def assign_tasks(request, event_id):
         Task.objects.filter(attendance__event__pk=event_id).delete()
         event = Event.objects.get(pk=event_id)
         # entrainement tasks
-        if event.event_type == Event.ENTRAINEMENT:
+        if event.event_type == Event.ENTRAINEMENT or event.event_type == Event.MATCH:
             players = Attendance.objects.filter(
                 event__pk=event_id,
                 is_attending=True,
                 attendee__groups__name__in=('joueur', )
             ).order_by('?')
             if len(players) > 0:
-                for num, task_type in enumerate(Task.TASK_ENTRAINEMENT, start=0):
+                tasks_list = Task.TASK_ENTRAINEMENT if event.event_type == Event.ENTRAINEMENT else Task.TASK_MATCH
+                for num, task_type in enumerate(tasks_list, start=0):
                     if num < len(players):
                         Task.objects.create(attendance=players[num], task_type=task_type)
     return redirect('list_attendances', event_id=event_id)

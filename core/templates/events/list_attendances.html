@@ -15,7 +15,7 @@
         <th scope="col">Evénement</th>
         <th scope="col">Joueur</th>
         <th scope="col">Est présent</th>
-        {% if event.event_type == 'ENTRAINEMENT' %}
+        {% if event.event_type == 'ENTRAINEMENT' or event.event_type == 'MATCH' %}
         <th scope="col">Tâche</th>
         {% endif %}
         {% if event.event_type == 'MATCH' %}
@@ -36,7 +36,7 @@
         {% if event.event_type == 'MATCH' %}
           <td>{% if attendant.is_selected == True %}✔️{% elif attendant.is_selected == False %}❌{% else %}❔{% endif %}</td>
         {% endif %}
-        {% if event.event_type == 'ENTRAINEMENT' %}
+        {% if event.event_type == 'ENTRAINEMENT' or event.event_type == 'MATCH' %}
         <td>{{ attendant.task.get_task_type_display }}</td>
         {% endif %}
         {% if request.user|has_group:"entraineur" and event.event_type == 'MATCH' %}
@@ -53,7 +53,7 @@
   {% else %}
   <div><p>Aucune présence disponible</p></div>
   {% endif %}
-  {% if request.user|has_group:"entraineur" and event.event_type == 'ENTRAINEMENT' %}
+  {% if request.user|has_group:"entraineur" and event.event_type in 'ENTRAINEMENT,MATCH' %}
   <form method="post" action="{% url 'assign_tasks' event_id=event.pk %}">
     {% csrf_token %}
     <button type="submit" class="btn btn-primary">Assigner les tâches</button>

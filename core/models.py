@@ -63,12 +63,19 @@ class Task(models.Model):
     EAU = 'EAU'
     LAVAGE_CHASUBLES = 'LAVAGE_CHASUBLES'
     VESTIAIRE = 'VESTIAIRE'
+    BALLONS = 'BALLONS'
+    LAVAGE_MAILLOTS = 'LAVAGE_MAILLOTS'
+    TRACAGE_TERRAIN = 'TRACAGE_TERRAIN'
     TASK_ENTRAINEMENT = [LAVAGE_CHASUBLES, VESTIAIRE, EAU, BAR]
+    TASK_MATCH = [BALLONS, LAVAGE_MAILLOTS, TRACAGE_TERRAIN, VESTIAIRE, EAU, BAR, VESTIAIRE, BAR, BAR]
     TASK_TYPES = [
         (BAR, 'Bar'),
         (EAU, 'Eau'),
         (LAVAGE_CHASUBLES, 'Lavage chasubles'),
         (VESTIAIRE, 'Vestiaire'),
+        (BALLONS, 'Ballons'),
+        (LAVAGE_MAILLOTS, 'Lavage maillots'),
+        (TRACAGE_TERRAIN, 'Traçage terrain')
     ]
 
     attendance = models.OneToOneField(Attendance, on_delete=models.CASCADE, verbose_name = 'Présence')
