@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from datetime import date
 from core.forms import SignUpForm, CreateEventForm, ModifyAttendanceForm, ModifySelectionForm
 from core.decorators import group_required
-from core.models import Event, Attendance
+from core.models import Event, Attendance, Task
 from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
@@ -17,6 +17,7 @@ from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.models import Group
 from django.conf import settings
+import random
 
 def index(request):
     return render(request, 'index.html')
@@ -145,3 +146,22 @@ def player_selection(request, attendance_id):
 def list_users(request):
     return render(request, 'users/list.html',
         {'users': User.objects.filter(is_active=True)})
+
+@group_required("entraineur")
+def assign_tasks(request, event_id):
+    if request.method == 'POST':
+        # Remove old tasks
+        Task.objects.filter(attendance__event__pk=event_id).delete()
+        event = Event.objects.get(pk=event_id)
+        # entrainement tasks
+        if event.event_type == Event.ENTRAINEMENT:
+            players = Attendance.objects.filter(
+                event__pk=event_id,
+                is_attending=True,
+                attendee__groups__name__in=('joueur', )
+            ).order_by('?')
+            if len(players) > 0:
+                for num, task_type in enumerate(Task.TASK_ENTRAINEMENT, start=0):
+                    if num < len(players):
+                        Task.objects.create(attendance=players[num], task_type=task_type)
+    return redirect('list_attendances', event_id=event_id)

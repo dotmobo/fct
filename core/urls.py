@@ -15,5 +15,6 @@ urlpatterns = [
     path('events/my-attendances', views.my_attendances, name='my_attendances'),
     path('events/my-attendances/<int:attendance_id>', views.my_attendance, name='my_attendance'),
     path('events/player-selection/<int:attendance_id>', views.player_selection, name='player_selection'),
+    path('events/<int:event_id>/assign-tasks', views.assign_tasks, name='assign_tasks'),
     path('users/list', views.list_users, name='list_users')
 ]

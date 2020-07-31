@@ -58,6 +58,34 @@ class Attendance(models.Model):
     def __str__(self):
         return "%s - %s" % (self.event, self.attendee)
 
+class Task(models.Model):
+    BAR = 'BAR'
+    EAU = 'EAU'
+    LAVAGE_CHASUBLES = 'LAVAGE_CHASUBLES'
+    VESTIAIRE = 'VESTIAIRE'
+    TASK_ENTRAINEMENT = [LAVAGE_CHASUBLES, VESTIAIRE, EAU, BAR]
+    TASK_TYPES = [
+        (BAR, 'Bar'),
+        (EAU, 'Eau'),
+        (LAVAGE_CHASUBLES, 'Lavage chasubles'),
+        (VESTIAIRE, 'Vestiaire'),
+    ]
+
+    attendance = models.OneToOneField(Attendance, on_delete=models.CASCADE, verbose_name = 'Présence')
+    task_type = models.CharField(
+        null=True,
+        max_length=50,
+        choices=TASK_TYPES,
+        default=None,
+        verbose_name = 'Type'
+    )
+
+    class Meta:
+        verbose_name = 'Tâche'
+
+    def __str__(self):
+        return "%s - %s" % (self.attendance, self.task_type)
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email_confirmed = models.BooleanField(default=False)
