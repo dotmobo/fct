@@ -21,7 +21,7 @@
             <td>{{ event.get_event_type_display }}</td>
             <td>{{ event.event_date }}</td>
             <td>{{ event.description }}</td>
-            <td><a href="{% url 'list_attendances' event_id=event.pk %}" class="btn btn-secondary">&#128269;</a></td>
+            <td><a href="{% url 'list_attendances' event_id=event.pk %}" class="btn btn-secondary">☼</a></td>
           </tr>
           {% endfor %}
         </tbody>

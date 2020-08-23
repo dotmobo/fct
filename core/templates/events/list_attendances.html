@@ -15,11 +15,11 @@
         <th scope="col">Evénement</th>
         <th scope="col">Joueur</th>
         <th scope="col">Est présent</th>
-        {% if event.event_type == 'ENTRAINEMENT' or event.event_type == 'MATCH' %}
-        <th scope="col">Tâche</th>
-        {% endif %}
         {% if event.event_type == 'MATCH' %}
         <th scope="col">Est sélectionné</th>
+        {% endif %}
+        {% if event.event_type == 'ENTRAINEMENT' or event.event_type == 'MATCH' %}
+        <th scope="col">Tâche</th>
         {% endif %}
         {% if request.user|has_group:"entraineur" and event.event_type == 'MATCH' %}
           <th scope="col">Sélectionner</th>
@@ -42,7 +42,7 @@
         {% if request.user|has_group:"entraineur" and event.event_type == 'MATCH' %}
           <td>
             {% if attendant.is_attending == True %}
-              <a href="{% url 'player_selection' attendance_id=attendant.pk %}" class="btn btn-secondary">🖉</a>
+              <a href="{% url 'player_selection' attendance_id=attendant.pk %}" class="btn btn-secondary">✎</a>
             {% endif %}
           </td>
         {% endif %}
