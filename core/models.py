@@ -105,6 +105,14 @@ def update_user_profile(sender, instance, created, **kwargs):
             Profile.objects.create(user=instance, phone=instance.phone)
         else:
             Profile.objects.create(user=instance, phone='')
+        # send mail to 'entraineur'
+        for u in User.objects.filter(groups__name__in=('entraineur',) ):
+            subject = 'Un compte a été créé'
+            message = render_to_string('emails/account_creation.html', {
+                'user': instance,
+                'domain': settings.EMAIL_DOMAIN_LINK,
+            })
+            u.email_user(subject, message)
     instance.profile.save()
 
 

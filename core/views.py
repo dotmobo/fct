@@ -77,8 +77,9 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.profile.email_confirmed = True
         user.save()
-        joueur = Group.objects.get(name='joueur')
-        joueur.user_set.add(user)
+        # Don't add the user to the group 'joueur' automatically
+        # joueur = Group.objects.get(name='joueur')
+        # joueur.user_set.add(user)
         login(request, user)
         return redirect('index')
     else:
