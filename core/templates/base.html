@@ -34,10 +34,10 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown01">
-                {% if request.user|has_group:"entraineur" %}
+                {% if request.user|has_group:"entraineur" or request.user|has_group:"comité" %}
                 <a class="dropdown-item" href="{% url 'create_event' %}">Créer un événement</a>
                 {% endif %}
-                {% if request.user|has_group:"entraineur" or request.user|has_group:"joueur" %}
+                {% if request.user|has_group:"entraineur" or request.user|has_group:"joueur" or request.user|has_group:"comité" %}
                 <a class="dropdown-item" href="{% url 'list_events' %}">Lister les événements</a>
                 <a class="dropdown-item" href="{% url 'my_attendances' %}">Voir mes présences</a>
                 <a class="dropdown-item" href="{% url 'list_users' %}">Voir les membres</a>
