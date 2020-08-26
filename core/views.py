@@ -17,6 +17,7 @@ from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.models import Group
 from django.conf import settings
+from django.db.models import Count
 import random
 
 def index(request):
@@ -155,13 +156,16 @@ def assign_tasks(request, event_id):
         event = Event.objects.get(pk=event_id)
         # entrainement tasks
         if event.event_type == Event.ENTRAINEMENT or event.event_type == Event.MATCH:
+            # on récupères les présences et on les tri en fonction du nombres de tâches
+            # des joueurs, pour éviter que çe soit toujours les mêmes qui fassent les tâches
             players = Attendance.objects.filter(
                 event__pk=event_id,
                 is_attending=True,
                 attendee__groups__name__in=('joueur', )
-            ).order_by('?')
+            ).annotate(count=Count('attendee__attending__task')).order_by('count')
             if len(players) > 0:
                 tasks_list = Task.TASK_ENTRAINEMENT if event.event_type == Event.ENTRAINEMENT else Task.TASK_MATCH
+                random.shuffle(tasks_list)
                 for num, task_type in enumerate(tasks_list, start=0):
                     if num < len(players):
                         Task.objects.create(attendance=players[num], task_type=task_type)
