@@ -93,7 +93,7 @@ def create_event(request):
             new_event = form.save()
             form.cleaned_data['added_by'] = request.user
             # Create attendance for all players
-            for u in User.objects.filter(groups__name__in=('joueur', 'entraineur', 'comité') ):
+            for u in User.objects.filter(groups__name__in=('joueur', 'entraineur', 'comité')).distinct():
                 Attendance.objects.create(event=new_event, attendee=u, is_attending=None)
             return redirect('list_events')
     else:
