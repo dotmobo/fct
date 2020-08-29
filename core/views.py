@@ -162,7 +162,15 @@ def assign_tasks(request, event_id):
                 event__pk=event_id,
                 is_attending=True,
                 attendee__groups__name__in=('joueur', )
-            ).annotate(count=Count('attendee__attending__task')).order_by('count')
+            )
+            # Pour les matchs on garde que les joueurs sélectionnées
+            if event.event_type == Event.MATCH:
+                players = players.filter(
+                    is_selected=True
+                )
+            # On tri pour avoir les joueurs qui ont le moins de tâches
+            players = players.annotate(count=Count('attendee__attending__task')).order_by('count')
+            # On affecte les tâches
             if len(players) > 0:
                 tasks_list = Task.TASK_ENTRAINEMENT if event.event_type == Event.ENTRAINEMENT else Task.TASK_MATCH
                 random.shuffle(tasks_list)
