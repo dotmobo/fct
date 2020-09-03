@@ -42,17 +42,19 @@ class ModifyAttendanceForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ModifyAttendanceForm, self).__init__(*args, **kwargs)
+        # Manage is_present_at_lunch for ENTRAINEMENT
+        if (self.instance.event.event_type != 'ENTRAINEMENT'):
+            self.disabled_fields = self.disabled_fields + ('is_present_at_lunch',)
+        # Disabled and hide fields
         for field in self.disabled_fields:
             self.fields[field].disabled = True
+            self.fields[field].widget = forms.HiddenInput()
+
 
     class Meta:
         model = Attendance
-        fields = ['event', 'attendee', 'is_attending', 'is_selected']
-        widgets = {
-            'event': forms.HiddenInput(),
-            'attendee': forms.HiddenInput(),
-            'is_selected': forms.HiddenInput(),
-        }
+        fields = ['event', 'attendee', 'is_attending', 'is_present_at_lunch', 'is_selected']
+
 
 class ModifySelectionForm(forms.ModelForm):
     disabled_fields = ('event', 'attendee', 'is_attending')

@@ -51,6 +51,7 @@ class Attendance(models.Model):
     attendee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='attending', verbose_name = 'Participant')
     is_attending = models.BooleanField(null=True, verbose_name = 'Est présent')
     is_selected = models.BooleanField(null=True, verbose_name = 'Est sélectionné')
+    is_present_at_lunch = models.BooleanField(null=True, verbose_name = 'Vient au repas')
 
     class Meta:
         verbose_name = 'Présence'

@@ -15,6 +15,9 @@
         <th scope="col">Evénement</th>
         <th scope="col">Joueur</th>
         <th scope="col">Est présent</th>
+        {% if event.event_type == 'ENTRAINEMENT' %}
+        <th scope="col">Vient au repas</th>
+        {% endif %}
         {% if event.event_type == 'MATCH' %}
         <th scope="col">Est sélectionné</th>
         {% endif %}
@@ -33,8 +36,11 @@
         <td>{{ event }}</td>
         <td>{{ attendant.attendee.last_name }} {{ attendant.attendee.first_name }}</td>
         <td>{% if attendant.is_attending == True %}✔️{% elif attendant.is_attending == False %}❌{% else %}❔{% endif %}</td>
+        {% if event.event_type == 'ENTRAINEMENT' %}
+        <td>{% if attendant.is_present_at_lunch == True %}✔️{% elif attendant.is_present_at_lunch == False %}❌{% else %}❔{% endif %}</td>
+        {% endif %}
         {% if event.event_type == 'MATCH' %}
-          <td>{% if attendant.is_selected == True %}✔️{% elif attendant.is_selected == False %}❌{% else %}❔{% endif %}</td>
+        <td>{% if attendant.is_selected == True %}✔️{% elif attendant.is_selected == False %}❌{% else %}❔{% endif %}</td>
         {% endif %}
         {% if event.event_type == 'ENTRAINEMENT' or event.event_type == 'MATCH' %}
         <td>{{ attendant.task.get_task_type_display }}</td>
