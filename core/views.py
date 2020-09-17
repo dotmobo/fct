@@ -1,9 +1,10 @@
 from django.http import HttpResponse
 from django.shortcuts import render, render, redirect
-from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib import messages
 from datetime import date
 from core.forms import SignUpForm, CreateEventForm, ModifyAttendanceForm, ModifySelectionForm
 from core.decorators import group_required
@@ -178,3 +179,20 @@ def assign_tasks(request, event_id):
                     if num < len(players):
                         Task.objects.create(attendance=players[num], task_type=task_type)
     return redirect('list_attendances', event_id=event_id)
+
+@group_required("entraineur", "joueur", "comité")
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Le mot de passe a bien été changé!')
+            return redirect('change_password')
+        else:
+            messages.error(request, 'Corrigez les erreurs ci-dessous.', extra_tags='danger')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'users/change_password.html', {
+        'form': form
+    })
